@@ -19,11 +19,12 @@ namespace tik_toeGameassigment
                 while (true)
                 {
                     int bestScore = int.MinValue;
+                    (int row, int col) bestmove = (-1, -1);
                     // Read opponent's move
                     string[] inputs = Console.ReadLine().Split(' ');
                     int opponentRow = int.Parse(inputs[0]);
                     int opponentCol = int.Parse(inputs[1]);
-                    (int row, int col) bestmove = (-1, -1);
+                    
                     // Update the board with opponent's move
                     if (opponentRow != -1 && opponentCol != -1) // -1 means no move yet
                     {

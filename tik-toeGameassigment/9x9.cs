@@ -161,11 +161,11 @@ namespace tik_toeGameassigment
                     }
                     else if ((board[i, map.col + 1] == board[i, map.col + 2]) && (board[i, map.col + 1] == player) && board[i, map.col] == '.')
                     {
-                        return (i, map.col + 1);
+                        return (i, map.col);
                     }
                     else if ((board[i, map.col] == board[i, map.col + 2]) && (board[i, map.col] == player) && board[i, map.col + 1] == '.')
                     {
-                        return (i, map.col + 2);
+                        return (i, map.col + 1);
                     }
                 }
 

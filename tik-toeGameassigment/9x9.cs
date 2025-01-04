@@ -145,8 +145,12 @@ namespace tik_toeGameassigment
                         Console.WriteLine($"{bestmove.row} {bestmove.col}");
                         board[bestmove.row, bestmove.col] = 'X';//do move
                     }
-
+                    //4 ALPHA BETA
+                    bestmove = FindBestMove(board, currentboardnum);
+                    Console.WriteLine($"{bestmove.row} {bestmove.col}");
+                    board[bestmove.row, bestmove.col] = 'X';
                 }
+                
             }
             //check best move 
             static (int, int) bestMove(char[,] board, int num, char player)
@@ -435,6 +439,97 @@ namespace tik_toeGameassigment
                         }
                     }
                     return bestScore;
+                }
+            }
+
+
+
+
+
+
+            static (int, int) FindBestMove(char[,] board, int num)
+            {
+                int bestValue = int.MinValue;
+                (int bestRow, int bestCol) = (-1, -1);
+
+                (int row, int col) = dividedBoard(num);
+
+                for (int i = row; i < row + 3; i++)
+                {
+                    for (int j = col; j < col + 3; j++)
+                    {
+                        if (board[i, j] == '.')
+                        {
+                            board[i, j] = 'X';
+                            int moveValue = AlphaBeta(board, 0, false, num, int.MinValue, int.MaxValue);
+                            board[i, j] = '.';
+
+                            if (moveValue > bestValue)
+                            {
+                                bestValue = moveValue;
+                                bestRow = i;
+                                bestCol = j;
+                            }
+                        }
+                    }
+                }
+                return (bestRow, bestCol);
+            }
+
+            static int AlphaBeta(char[,] board, int depth, bool isMaxTurn, int num, int alpha, int beta)
+            {
+                (int row, int col) = dividedBoard(num);
+                int winner = CheckWinner(board, dividedBoard(num));
+
+                if (winner != 0)
+                    return winner == 1 ? 10 - depth : -10 + depth;
+
+                if (IsBoardFull(board, num))
+                    return 0;
+
+                if (isMaxTurn)
+                {
+                    int maxEval = int.MinValue;
+                    for (int i = row; i < row + 3; i++)
+                    {
+                        for (int j = col; j < col + 3; j++)
+                        {
+                            if (board[i, j] == '.')
+                            {
+                                board[i, j] = 'X';
+                                int eval = AlphaBeta(board, depth + 1, false, num, alpha, beta);
+                                board[i, j] = '.';
+                                maxEval = Math.Max(maxEval, eval);
+                                alpha = Math.Max(alpha, eval);
+
+                                if (beta <= alpha)
+                                    return maxEval;
+                            }
+                        }
+                    }
+                    return maxEval;
+                }
+                else
+                {
+                    int minEval = int.MaxValue;
+                    for (int i = row; i < row + 3; i++)
+                    {
+                        for (int j = col; j < col + 3; j++)
+                        {
+                            if (board[i, j] == '.')
+                            {
+                                board[i, j] = 'O';
+                                int eval = AlphaBeta(board, depth + 1, true, num, alpha, beta);
+                                board[i, j] = '.';
+                                minEval = Math.Min(minEval, eval);
+                                beta = Math.Min(beta, eval);
+
+                                if (beta <= alpha)
+                                    return minEval;
+                            }
+                        }
+                    }
+                    return minEval;
                 }
             }
         }
